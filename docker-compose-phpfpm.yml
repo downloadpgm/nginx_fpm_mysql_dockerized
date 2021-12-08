@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  phpfpm:
+    image: bitnami/php-fpm
+    volumes:
+      - ./app:/app
+    networks:
+      - app-tier
+  nginx:
+    image: bitnami/nginx
+    volumes:
+      - /root/server_block.conf:/opt/bitnami/nginx/conf/server_blocks/myapp.conf
+    networks:
+      - app-tier
+    ports:
+      - '8080:8080'
+  mysql:
+    image: mysql
+    volumes: 
+      - mysql_data:/var/lib/mysql
+    networks:
+      - app-tier
+    environment:
+      - MYSQL_ROOT_PASSWORD=admsys123
+      - MYSQL_USER=myapp
+      - MYSQL_PASSWORD=123456
+      - MYSQL_DATABASE=myapp
+
+networks:
+  app-tier:
+
+volumes:
+  mysql_data:
